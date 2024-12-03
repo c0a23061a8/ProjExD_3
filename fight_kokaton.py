@@ -161,10 +161,14 @@ def main():
         if bomb is not None:
             if bird.rct.colliderect(bomb.rct):    
                 # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
+                font = pg.font.Font(None, 80)
+                txt = font.render("Game Over", True,(255, 0, 0))
+                screen.blit(txt, [WIDTH//2-150, HEIGHT//2])
                 bird.change_img(8, screen)
                 pg.display.update()
                 time.sleep(1)
                 return
+            
         if (bomb is not None) and (beam is not None):
             if bomb.rct.colliderect(beam.rct):  # 爆弾とビームが衝突したら
                 bird.change_img(6, screen)

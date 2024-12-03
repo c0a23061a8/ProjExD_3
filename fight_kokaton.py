@@ -7,6 +7,7 @@ import pygame as pg
 
 WIDTH = 1100  # ゲームウィンドウの幅
 HEIGHT = 650  # ゲームウィンドウの高さ
+NUM_OF_BOMBS = 5  # 爆弾の数
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -145,7 +146,8 @@ def main():
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
     bg_img = pg.image.load("fig/pg_bg.jpg")
     bird = Bird((300, 200))
-    bomb = Bomb((255, 0, 0), 10)
+    # bomb = Bomb((255, 0, 0), 10)
+    bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     beam = None  # ビームインスタンスを生成
     clock = pg.time.Clock()
     tmr = 0
@@ -168,7 +170,6 @@ def main():
                 pg.display.update()
                 time.sleep(1)
                 return
-            
         if (bomb is not None) and (beam is not None):
             if bomb.rct.colliderect(beam.rct):  # 爆弾とビームが衝突したら
                 bird.change_img(6, screen)
@@ -180,7 +181,8 @@ def main():
         bird.update(key_lst, screen)
         if beam is not None:
             beam.update(screen)   
-        if bomb is not None:
+        bombs = [bomb for bomb in bombs if bomb is not None]
+        for bomb in bombs:  # それぞれの爆弾に対して
             bomb.update(screen)
         pg.display.update()
         tmr += 1

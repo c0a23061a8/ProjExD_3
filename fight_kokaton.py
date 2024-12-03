@@ -141,6 +141,28 @@ class Bomb:
         screen.blit(self.img, self.rct)
 
 
+class Explosion:
+    def __init__(self,bomb: Bomb):
+        self.imgs = []
+        self.life = 10
+        self.img1 = pg.image.load(f"fig/explosion.gif")
+        self.img1.rct = self.img1.get_rect()
+        self.img2 = pg.image.load(f"fig/e xplosion.gif")
+        self.img2 = pg.transform.flip(self.img2, True, True)
+        self.img2.rct = self.img2.get_rect()
+        self.img1.rct.center = bomb.center
+        self.img2.rct.center = bomb.center
+        self.imgs.append(self.img1)
+        self.imgs.append(self.img2)
+    
+    def update(self,tmr: int, screen: pg.Surface):
+        self.life -= 1
+        if self.life >= 0 and tmr % 2 == 0:
+            screen.blit(self.imgs[0], self.rct)
+        elif self.life >= 0 and tmr % 2 == 1:
+            screen.blit(self.imgs[1], self.rct)
+
+
 class Score:
     def __init__(self,screen: pg.Surface):
         self.cnt = 0
@@ -163,6 +185,7 @@ def main():
     beam = None  # ビームインスタンスを生成
     beams = []
     score = Score(screen)
+    explosion = []
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -192,6 +215,7 @@ def main():
                     if bombs[i].rct.colliderect(beams[j].rct):  # 爆弾とビームが衝突したら
                         bird.change_img(6, screen)
                         score.cnt += 1
+                        explosion.append(Explosion (bombs[i]))
                         beams[j] = None
                         bombs[i] = None
                         pg.display.update()
@@ -208,6 +232,9 @@ def main():
         bombs = [bomb for bomb in bombs if bomb is not None]
         for bomb in bombs:  # それぞれの爆弾に対して
             bomb.update(screen)
+        explosion = [e for e in explosion if e > 0]  # lifeが0より小さいインスタンスを削除
+        for e in explosion:  # それぞれの爆弾に対して
+            e.update(tmr, screen)
         score.update(screen)
         pg.display.update()
         tmr += 1

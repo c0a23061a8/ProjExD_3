@@ -186,9 +186,9 @@ def main():
                     pg.display.update()
                     time.sleep(1)
                     return
-        for i in range(len(bombs)):
-            for j in range(len(beams)):
-                if (beams[j] is not None) and (bombs[i] is not None):
+        for i in range(len(bombs)):  # それぞれの爆弾に対して
+            for j in range(len(beams)):   # それぞれのビームに対して
+                if (beams[j] is not None) and (bombs[i] is not None):  # ビームと爆弾がNoneでなかったら
                     if bombs[i].rct.colliderect(beams[j].rct):  # 爆弾とビームが衝突したら
                         bird.change_img(6, screen)
                         score.cnt += 1
